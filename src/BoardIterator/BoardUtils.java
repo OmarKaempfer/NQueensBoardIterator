@@ -1,5 +1,8 @@
 package BoardIterator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BoardUtils {
     private int[] columns;
     private int[] rows;
@@ -56,15 +59,25 @@ public class BoardUtils {
         return true;
     }
 
-    public void printSolutions(BoardIterator boardIterator) {
+    public void printAllSolutions(BoardIterator boardIterator) {
+        List<int[]> solutions = findAllSolutions(boardIterator);
+        for(int[] solution : solutions) {
+            printBoard(solution);
+            System.out.println();
+        }
+    }
+
+    public List<int[]> findAllSolutions(BoardIterator boardIterator) {
         int[] currentBoard;
+        List<int[]> solutions = new ArrayList<>();
         while(boardIterator.hasNext()) {
             currentBoard = boardIterator.next();
             if(isSolution(currentBoard)) {
-                printBoard(currentBoard);
-                System.out.println();
+                solutions.add(currentBoard.clone());
             }
         }
+
+        return solutions;
     }
 
     public void resetAuxArrays() {
@@ -77,5 +90,16 @@ public class BoardUtils {
             descendingDiagonals[i] = 0;
             ascendingDiagonals[i] = 0;
         }
+    }
+
+    public int[] findFirstSolution(BoardIterator boardIterator) {
+        int[] currentBoard;
+        while(boardIterator.hasNext()) {
+            currentBoard = boardIterator.next();
+            if(isSolution(currentBoard)) {
+                return currentBoard;
+            }
+        }
+        return null;
     }
 }
