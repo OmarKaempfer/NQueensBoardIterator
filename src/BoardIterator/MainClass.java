@@ -1,5 +1,9 @@
 package BoardIterator;
 
+import java.awt.desktop.OpenURIEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -35,25 +39,47 @@ public class MainClass {
                 tfFlag = true;
             }
         }
+        BufferedWriter bw = null;
+        try {
+            FileWriter fw = new FileWriter("bf_java_results.txt");
+            bw = new BufferedWriter(fw);
+            bw.write("");
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
 
         if(!tFlag && !taFlag && !tfFlag) {
             new BoardUtils(boardSize).printAllSolutions(new BoardIterator(boardSize));
             System.exit(0);
         }
+        String outputStr;
+        try {
+            if (tFlag) {
+                outputStr = "Printing ALL solutions: " + getPrintingTime(boardSize) + " s";
+                System.out.println(outputStr);
+                bw.append(outputStr + "\n");
+                bw.newLine();
+            }
 
-        if(tFlag) {
-            System.out.println("Printing ALL solutions: " + getPrintingTime(boardSize) + " s");
-        }
+            if (taFlag) {
+                outputStr = "Finding ALL solutions: " + getAllSolutionsTime(boardSize) + " s";
+                System.out.println(outputStr);
+                bw.append(outputStr);
+                bw.newLine();
+            }
 
-        if(taFlag) {
-            System.out.println("Finding ALL solutions: " + getAllSolutionsTime(boardSize) + " s");
-        }
-
-        if(tfFlag) {
-            System.out.println("Finding FIRST solution: " + getFirstSolutionTime(boardSize) + " s");
+            if (tfFlag) {
+                outputStr = "Finding FIRST solution: " + getFirstSolutionTime(boardSize) + " s";
+                System.out.println(outputStr);
+                bw.append(outputStr);
+                bw.newLine();
+            }
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-    
+
     public static double getPrintingTime(int boardSize) {
         BoardIterator boardIterator = new BoardIterator(boardSize);
         BoardUtils boardUtils = new BoardUtils(boardSize);
