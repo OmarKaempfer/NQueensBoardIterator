@@ -11,6 +11,8 @@ public class BoardUtils {
 
     private int boardSize;
 
+    // We create some arrays to keep track of the positions attacked.
+    // So we create columns, rows and diagonals arrays
     public BoardUtils(int boardSize) {
         this.boardSize = boardSize;
         columns = new int[boardSize];
@@ -19,9 +21,11 @@ public class BoardUtils {
         ascendingDiagonals = new int[2*boardSize - 1];
     }
 
+
     public void printBoard(int[] board) {
         int rowIndex = 0;
 
+        // Prints chunks of the array and insert line breaks to print a two dimensional grid
         for(int i = 0; i < board.length; i++) {
             System.out.print(board[i] + " ");
             rowIndex++;
@@ -42,14 +46,22 @@ public class BoardUtils {
                 continue;
             }
 
+            /* We are using a one dimensional array to represent the board so
+            * we need to calculate the row index and column index for each
+            * one dimensional position
+            */
             rowIndex = i/boardSize;
             columnIndex = i%boardSize;
+
+            // Checks if the current queen position is attacked from any direction
             if(rows[rowIndex] == 1 || columns[columnIndex] == 1
                     || descendingDiagonals[columnIndex - rowIndex + boardSize - 1] == 1
                     || ascendingDiagonals[rowIndex + columnIndex] == 1) {
                 resetAuxArrays();
                 return false;
             }
+
+            //Marks the column, row and diagonals attacked by this new queen with a 1
             columns[columnIndex]++;
             rows[rowIndex]++;
             descendingDiagonals[columnIndex - rowIndex + boardSize - 1]++;
@@ -80,6 +92,8 @@ public class BoardUtils {
         return solutions;
     }
 
+    /** Sets to 0 all the positions of the attack checking helper arrays
+     */
     public void resetAuxArrays() {
         for(int i = 0; i < rows.length; i++) {
             rows[i] = 0;

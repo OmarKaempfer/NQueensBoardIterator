@@ -1,6 +1,5 @@
 package BoardIterator;
 
-import java.awt.desktop.OpenURIEvent;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,11 +7,11 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 public class MainClass {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         argumentParsing(args);
     }
 
-    public static void argumentParsing(String[] args) {
+    private static void argumentParsing(String[] args) {
         if(args.length < 1) {
             System.out.println("Missing mandatory argument");
             System.exit(0);
@@ -26,7 +25,7 @@ public class MainClass {
         try {
             boardSize = Integer.parseInt(args[0]);
         } catch (NumberFormatException nfe) {
-            System.out.println("First argument must be board size");
+            System.out.println("First argument must be the board size");
             System.exit(1);
         }
 
@@ -39,6 +38,7 @@ public class MainClass {
                 tfFlag = true;
             }
         }
+
         BufferedWriter bw = null;
         try {
             FileWriter fw = new FileWriter("bf_java_results.txt");
@@ -48,36 +48,40 @@ public class MainClass {
             e.printStackTrace();
         }
 
+        // No option arguments passed -> Just print the solutions
         if(!tFlag && !taFlag && !tfFlag) {
             new BoardUtils(boardSize).printAllSolutions(new BoardIterator(boardSize));
             System.exit(0);
         }
+
         String outputStr;
         try {
             if (tFlag) {
                 outputStr = "Printing ALL solutions: " + getPrintingTime(boardSize) + " s";
-                System.out.println(outputStr);
-                bw.append(outputStr + "\n");
-                bw.newLine();
+                handleOutput(outputStr, bw);
             }
 
             if (taFlag) {
                 outputStr = "Finding ALL solutions: " + getAllSolutionsTime(boardSize) + " s";
-                System.out.println(outputStr);
-                bw.append(outputStr);
-                bw.newLine();
+                handleOutput(outputStr, bw);
             }
 
             if (tfFlag) {
                 outputStr = "Finding FIRST solution: " + getFirstSolutionTime(boardSize) + " s";
-                System.out.println(outputStr);
-                bw.append(outputStr);
-                bw.newLine();
+                handleOutput(outputStr, bw);
             }
+
             bw.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void handleOutput(String outputStr, BufferedWriter bw) throws IOException {
+        System.out.println(outputStr);
+        bw.append(outputStr);
+        bw.newLine();
     }
 
     public static double getPrintingTime(int boardSize) {
